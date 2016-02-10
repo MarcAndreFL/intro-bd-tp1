@@ -1,3 +1,6 @@
+#pragma once
+
+
 class Date{
 	private:
 		int _year;

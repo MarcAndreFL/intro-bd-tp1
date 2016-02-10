@@ -1,5 +1,6 @@
 #include <string>
 
+
 class Book{
 	private:
 		unsigned int _iSBN;
