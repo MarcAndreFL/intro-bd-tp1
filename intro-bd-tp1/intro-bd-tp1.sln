@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30501.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "intro-bd-tp1", "intro-bd-tp1\intro-bd-tp1.vcxproj", "{5E19840A-7DC8-4256-BDA3-158FE560479C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5E19840A-7DC8-4256-BDA3-158FE560479C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{5E19840A-7DC8-4256-BDA3-158FE560479C}.Debug|Win32.Build.0 = Debug|Win32
+		{5E19840A-7DC8-4256-BDA3-158FE560479C}.Release|Win32.ActiveCfg = Release|Win32
+		{5E19840A-7DC8-4256-BDA3-158FE560479C}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
