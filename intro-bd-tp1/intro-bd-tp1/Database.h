@@ -8,12 +8,19 @@
 
 class Database{
 
-	private:
-		std::map<Book, unsigned int> _bookTable;
-		std::map<BookCopy, unsigned int> _bookCopiesTable;
-		std::map<BookLoan, unsigned int> _bookLoansTable;
-		std::map<Borrower, unsigned int> _borrowersTable;
-
 	public:
+		std::map<unsigned int, Book> _bookTable;
+		std::map<unsigned int, BookCopy> _bookCopiesTable;
+		std::map<unsigned int, BookLoan> _bookLoansTable;
+		std::map<unsigned int, Borrower> _borrowersTable;
+		static Database& GetInstance(){
+			static Database instance;
+			return instance;
+		}
 
+	private:
+		Database(){};
+		Database(Database const&);
+		void operator=(Database const&);
+		
 };
