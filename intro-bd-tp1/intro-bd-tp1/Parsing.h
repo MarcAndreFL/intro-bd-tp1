@@ -1,8 +1,8 @@
 #pragma once
 #include <String>
 #include <Vector>
-#include <iostream>
 #include <fstream> 
+#include Database.h
 
 class Parsing
 {
