@@ -21,21 +21,11 @@ Parsing::Parsing()
 		
 		
 		
-		//std::cout << std::string(value, 1, value.length() - 2); // display value removing the first and the last character from it
+		//std::cout << std::string(value, 1, value.length() - 2);
 	}
 }
 
-/*	
-	std::vector<std::string>   result;
-	std::string                line;
-	std::getline(str, line);
 
-	std::stringstream          lineStream(line);
-	std::string                cell;
-
-	while (std::getline(lineStream, cell, ','))
-	{
-		result.push_back(cell);
-		}
-		
-*/
+Book myBook = Book(1, "allo", "hello", 1994);
+Database::GetInstance()._bookTable.insert(std::pair<unsigned int, Book>(myBook.GetISBN(), myBook));
+std::cout << Database::GetInstance()._bookTable.at(myBook.GetISBN()).GetTitle();
