@@ -3,11 +3,13 @@
 #include <string>
 #include <map>
 #include <vector>
+#include <ctime>
 #include "Book.h"
 #include "BookLoan.h"
 #include "BookCopy.h"
 #include "Borrower.h"
 #include "Database.h"
+
 
 class Request 
 {
@@ -28,15 +30,15 @@ public:
 
 	/* Every copy of X book available */
 
-	/*
-	isbn dans BookCopy
-	Dans bookloan, si date de retour < que date aujourd'hui
-	*/
-	std::vector<std::string> BookCopyAvailable(unsigned int bookISBN) 
+	std::vector<unsigned int> BookCopyAvailable(unsigned int bookISBN)
 	{
 		std::map<unsigned int, BookCopy> booksCopy = Database::GetInstance()._bookCopiesTable;
-		std::map<unsigned int, BookLoan> booksLoan = Database::GetInstance()._bookLoansTable;
+		std::map<BookLoanKey, BookLoan> booksLoan = Database::GetInstance()._bookLoansTable;
 		std::vector<unsigned int> CopyNo;
+		std::vector<unsigned int> CopyNoAvailable;
+		time_t t = time(0);
+		struct tm *now = localtime(&t);
+
 
 		for (std::map<unsigned int, BookCopy>::iterator it = booksCopy.begin(); it != booksCopy.end(); it++)
 		{
@@ -46,22 +48,17 @@ public:
 			}
 		}
 
-
-		/*
-
-		for (std::map<unsigned int, BookLoan>::iterator it = booksLoan.begin(); it != booksLoan.end(); it++)
+		for (std::map<BookLoanKey, BookLoan>::iterator it = booksLoan.begin(); it != booksLoan.end(); it++)
 		{
-			if (it->second. == bookISBN)
-			{
-				CopyNo.push_back(it->second.GetCopyNo());
+			for (int i = 0; i < CopyNo.size(); i++){
+				if (it->second.GetCopyNo() == CopyNo[i]){
+					if (it->second.GetDateDue()._year <= now->tm_year + 1900 && it->second.GetDateDue()._month <= now->tm_mon + 1 && it->second.GetDateDue()._day <= now->tm_mday){
+						CopyNoAvailable.push_back(CopyNo[i]);
+					}
+				}
 			}
 		}
-
-
-
-
-
-		return CopyNo;*/
+		return CopyNoAvailable;
 	}
 
 	/* The name of every member with X book */
