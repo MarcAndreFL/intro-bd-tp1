@@ -65,6 +65,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Parsing.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Book.h" />
