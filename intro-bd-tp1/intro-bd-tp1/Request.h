@@ -64,12 +64,65 @@ public:
 	/* The name of every member with X book */
 	std::vector<std::string> BorrowersWithXBook(unsigned int bookISBN) 
 	{
+		std::map<unsigned int, BookCopy> booksCopy = Database::GetInstance()._bookCopiesTable;
+		std::map<BookLoanKey, BookLoan> booksLoan = Database::GetInstance()._bookLoansTable;
+		std::map<unsigned int, Borrower> borrower = Database::GetInstance()._borrowersTable;
+		std::vector<unsigned int> CopyNo;
+		std::vector<unsigned int> BorrowerNo;
+		std::vector<unsigned int> BorrowerName;
 
+		for (std::map<unsigned int, BookCopy>::iterator it = booksCopy.begin(); it != booksCopy.end(); it++)
+		{
+			if (it->second.GetISBN() == bookISBN)
+			{
+				CopyNo.push_back(it->second.GetCopyNo());
+			}
+		}
+
+		for (std::map<BookLoanKey, BookLoan>::iterator it = booksLoan.begin(); it != booksLoan.end(); it++)
+		{
+			for (int i = 0; i < CopyNo.size(); i++){
+				if (it->second.GetCopyNo() == CopyNo[i]){
+						BorrowerNo.push_back(CopyNo[i].GetBorrowerNo());
+					}
+			}
+		}
+
+		for (std::map<unsigned int, Borrower>::iterator it = borrower.begin(); it != borrower.end(); it++)
+		{
+			for (int i = 0; i < CopyNo.size(); i++){
+				if (it->second.GetBorrowerNo() == BorrowerNo[i])
+				{
+					BorrowerName.push_back(it->second.borrowerName());
+				}
+			}
+		}
+		return BorrowerName;
 	}
 
 	/* The name of every member with a book */
-	std::vector<std::string> BorrowersWithBook(unsigned int bookISBN)
+	std::vector<std::string> BorrowersWithBook()
 	{
+		std::map<BookLoanKey, BookLoan> booksLoan = Database::GetInstance()._bookLoansTable;
+		std::map<unsigned int, Borrower> borrower = Database::GetInstance()._borrowersTable;
+		std::vector<unsigned int> BorrowerNo;
+		std::vector<unsigned int> BorrowerName;
 
+		for (std::map<BookLoanKey, BookLoan>::iterator it = booksLoan.begin(); it != booksLoan.end(); it++)
+		{
+
+				BorrowerNo.push_back(GetBorrowerNo());
+		}
+
+		for (std::map<unsigned int, Borrower>::iterator it = borrower.begin(); it != borrower.end(); it++)
+		{
+			for (int i = 0; i < CopyNo.size(); i++){
+				if (it->second.GetBorrowerNo() == BorrowerNo[i])
+				{
+					BorrowerName.push_back(it->second.borrowerName());
+				}
+			}
+		}
+		return BorrowerName;
 	}
 };
