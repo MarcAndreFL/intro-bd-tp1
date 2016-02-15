@@ -1,5 +1,6 @@
 #include "Parsing.h"
 
+
 Parsing::Parsing()
 {
 
@@ -37,16 +38,16 @@ void Parsing::DoBookParsing(){
 		std::getline(file, value, ',');
 		if (!file.eof()){ //si on n'a pas atteint le caractère vide à la fin
 			unsigned int isbn = std::stoi(value);
-			std::cout << "isbn to add: " << isbn << "\t";
+			//std::cout << "isbn to add: " << isbn << "\t";
 			std::getline(file.ignore(1), value, '"'); //on ignore le premier "
 			std::string name = value;
-			std::cout << "name to add: " << name << "\t";
+			//std::cout << "name to add: " << name << "\t";
 			std::getline(file.ignore(1), value, ','); //on ignore la première virgule
 			std::string edition = value;
-			std::cout << "edition to add: " << edition << "\t";
+			//std::cout << "edition to add: " << edition << "\t";
 			std::getline(file, value, '\n');
 			unsigned int year = std::stoi(value);
-			std::cout << "year to add: " << year << "\n\n";
+			//std::cout << "year to add: " << year << "\n\n";
 
 
 			Book currentBook = Book(isbn, name, edition, year);
@@ -64,13 +65,13 @@ void Parsing::DoBookCopyParsing(){
 		std::getline(file,  value, ',');
 		if (!file.eof()){ //si on n'a pas atteint le caractère vide à la fin
 			unsigned int copyNo = std::stoi(value);
-			std::cout << "copyNo to add: " << copyNo << "\t";
+			//std::cout << "copyNo to add: " << copyNo << "\t";
 			std::getline(file.ignore(1), value, '"'); //on ignore le premier "
 			unsigned int isbn = std::stoi(value);
-			std::cout << "isbn to add: " << isbn << "\t";
+			//std::cout << "isbn to add: " << isbn << "\t";
 			std::getline(file.ignore(2), value, '"'); //on ignore la première virgule et le "
 			bool available = value=="true";
-			std::cout << "availability: " << available << "\n\n";
+			//std::cout << "availability: " << available << "\n\n";
 
 
 			BookCopy currentBookCopy = BookCopy(copyNo, isbn, available);
@@ -89,7 +90,7 @@ void Parsing::DoBookLoanParsing(){
 		if (!file.eof()){ //si on n'a pas atteint le caractère vide à la fin
 			//CopyNumber
 			unsigned int copyNo = std::stoi(value);
-			std::cout << "copyNo to add: " << copyNo << "\t";
+			//std::cout << "copyNo to add: " << copyNo << "\t";
 
 			//Date OUT
 			std::getline(file.ignore(1), value, '-'); //on ignore le premier "
@@ -99,7 +100,7 @@ void Parsing::DoBookLoanParsing(){
 			std::getline(file, value, '"'); //on ignore le premier "
 			unsigned int dayOut = std::stoi(value);
 
-			std::cout << "dateOut to add: " << yearOut << "-" << monthOut << "-" << dayOut << "\t";
+			//std::cout << "dateOut to add: " << yearOut << "-" << monthOut << "-" << dayOut << "\t";
 
 			//Date IN
 			std::getline(file.ignore(2), value, '-'); //on ignore le premier "
@@ -109,13 +110,13 @@ void Parsing::DoBookLoanParsing(){
 			std::getline(file, value, '"'); //on ignore le premier "
 			unsigned int dayIn = std::stoi(value);
 
-			std::cout << "dateIn to add: " << yearIn << "-" << monthIn << "-" << dayIn << "\t";
+			//std::cout << "dateIn to add: " << yearIn << "-" << monthIn << "-" << dayIn << "\t";
 
 			//BorrowerID
 			std::getline(file.ignore(1), value, '\n'); //on ignore le premier "
 			unsigned int borrowerID = std::stoi(value);
 
-			std::cout << "borrowerID to add: " << borrowerID << "\n\n";
+			//std::cout << "borrowerID to add: " << borrowerID << "\n\n";
 
 
 			BookLoan currentBookLoan = BookLoan(copyNo, yearOut, monthOut, dayOut, yearIn, monthIn, dayIn, borrowerID);
@@ -135,18 +136,18 @@ void Parsing::DoBorrowerParsing(){
 		if (!file.eof()){ //si on n'a pas atteint le caractère vide à la fin
 			//Borrower ID
 			unsigned int borrowerID = std::stoi(value);
-			std::cout << "borrowerID to add: " << borrowerID << "\t";
+			//std::cout << "borrowerID to add: " << borrowerID << "\t";
 
 			//Borrower Name
 			std::getline(file.ignore(1), value, '"'); //on ignore le premier "
 			std::string borrowerName = value;
 
-			std::cout << "borrowerName to add: " << borrowerName << "\t";
+			//std::cout << "borrowerName to add: " << borrowerName << "\t";
 
 			//BorrowerAddress
 			std::getline(file.ignore(2), value, '"'); //on ignore le virgule suivi d'un guillemet
 			std::string borrowerAddress = value;
-			std::cout << "borrowerAddress to add: " << borrowerAddress << "\n\n";
+			//std::cout << "borrowerAddress to add: " << borrowerAddress << "\n\n";
 
 
 

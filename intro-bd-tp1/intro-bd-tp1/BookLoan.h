@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Date.h"
+#include <tuple>
 struct BookLoanKey
 {
 	BookLoanKey(unsigned int i, Date d)
@@ -13,16 +14,16 @@ struct BookLoanKey
 
 	bool operator<(const BookLoanKey& k) const
 	{
-		bool yearCompare = this->date._year == k.date._day;
-		bool monthCompare = this->date._month == k.date._month;
-		bool dayCompare = this->date._day == k.date._day;
-		bool indexCompare = this->copyNo == k.copyNo;
-		if (yearCompare && monthCompare && dayCompare && indexCompare){
-			return true;
+		if (copyNo == k.copyNo){
+			return date < k.date;
 		}
-		else{
-			return false;
-		}
+		
+		return copyNo < k.copyNo;
+	}
+
+	bool operator==(const BookLoanKey& k) const
+	{
+		return copyNo == k.copyNo && date == k.date;
 	}
 };
 

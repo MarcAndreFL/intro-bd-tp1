@@ -9,6 +9,7 @@
 #include "BookCopy.h"
 #include "Borrower.h"
 #include "Database.h"
+#include <algorithm>
 
 
 class Request 
@@ -33,11 +34,19 @@ public:
 	std::vector<unsigned int> BookCopyAvailable(unsigned int bookISBN)
 	{
 		std::map<unsigned int, BookCopy> booksCopy = Database::GetInstance()._bookCopiesTable;
-		std::map<BookLoanKey, BookLoan> booksLoan = Database::GetInstance()._bookLoansTable;
+		std::unordered_map<BookLoanKey, BookLoan> booksLoan = Database::GetInstance()._bookLoansTable;
 		std::vector<unsigned int> CopyNo;
 		std::vector<unsigned int> CopyNoAvailable;
-		time_t t = time(0);
-		struct tm *now = localtime(&t);
+		
+		struct tm newtime;
+		__time64_t long_time;
+		char timebuf[26];
+		errno_t err;
+
+		// Get time as 64-bit integer.
+		_time64(&long_time);
+		// Convert to local time.
+		err = _localtime64_s(&newtime, &long_time);
 
 
 		for (std::map<unsigned int, BookCopy>::iterator it = booksCopy.begin(); it != booksCopy.end(); it++)
@@ -48,16 +57,30 @@ public:
 			}
 		}
 
-		for (std::map<BookLoanKey, BookLoan>::iterator it = booksLoan.begin(); it != booksLoan.end(); it++)
+		for (std::unordered_map<BookLoanKey, BookLoan>::iterator it = booksLoan.begin(); it != booksLoan.end(); it++)
 		{
-			for (int i = 0; i < CopyNo.size(); i++){
+			for (unsigned int i = 0; i < CopyNo.size(); i++){
 				if (it->second.GetCopyNo() == CopyNo[i]){
-					if (it->second.GetDateDue()._year <= now->tm_year + 1900 && it->second.GetDateDue()._month <= now->tm_mon + 1 && it->second.GetDateDue()._day <= now->tm_mday){
+					if (it->second.GetDateDue()._year < newtime.tm_year+1900){
 						CopyNoAvailable.push_back(CopyNo[i]);
+					}
+					else if (it->second.GetDateDue()._year == newtime.tm_year + 1900){
+						if (it->second.GetDateDue()._month < newtime.tm_mon + 1){
+							CopyNoAvailable.push_back(CopyNo[i]);
+						}
+						else if (it->second.GetDateDue()._day < newtime.tm_mday){
+							CopyNoAvailable.push_back(CopyNo[i]);
+						}
 					}
 				}
 			}
 		}
+		//ON DELETE LES DOUBLONS DU VECTEUR
+		std::sort(CopyNoAvailable.begin(), CopyNoAvailable.end());
+		auto last = std::unique(CopyNoAvailable.begin(), CopyNoAvailable.end());
+		CopyNoAvailable.erase(last, CopyNoAvailable.end());
+
+		//PUIS ON OUTPUT LE VECTEUR
 		return CopyNoAvailable;
 	}
 
@@ -65,11 +88,11 @@ public:
 	std::vector<std::string> BorrowersWithXBook(unsigned int bookISBN) 
 	{
 		std::map<unsigned int, BookCopy> booksCopy = Database::GetInstance()._bookCopiesTable;
-		std::map<BookLoanKey, BookLoan> booksLoan = Database::GetInstance()._bookLoansTable;
+		std::unordered_map<BookLoanKey, BookLoan> booksLoan = Database::GetInstance()._bookLoansTable;
 		std::map<unsigned int, Borrower> borrower = Database::GetInstance()._borrowersTable;
 		std::vector<unsigned int> CopyNo;
 		std::vector<unsigned int> BorrowerNo;
-		std::vector<unsigned int> BorrowerName;
+		std::vector<std::string> BorrowerName;
 
 		for (std::map<unsigned int, BookCopy>::iterator it = booksCopy.begin(); it != booksCopy.end(); it++)
 		{
@@ -79,21 +102,21 @@ public:
 			}
 		}
 
-		for (std::map<BookLoanKey, BookLoan>::iterator it = booksLoan.begin(); it != booksLoan.end(); it++)
+		for (std::unordered_map<BookLoanKey, BookLoan>::iterator it = booksLoan.begin(); it != booksLoan.end(); it++)
 		{
-			for (int i = 0; i < CopyNo.size(); i++){
+			for (unsigned int i = 0; i < CopyNo.size(); i++){
 				if (it->second.GetCopyNo() == CopyNo[i]){
-						BorrowerNo.push_back(CopyNo[i].GetBorrowerNo());
+						BorrowerNo.push_back(it->second.GetBorrowerNo());
 					}
 			}
 		}
 
 		for (std::map<unsigned int, Borrower>::iterator it = borrower.begin(); it != borrower.end(); it++)
 		{
-			for (int i = 0; i < CopyNo.size(); i++){
+			for (unsigned int i = 0; i < CopyNo.size(); i++){
 				if (it->second.GetBorrowerNo() == BorrowerNo[i])
 				{
-					BorrowerName.push_back(it->second.borrowerName());
+					BorrowerName.push_back(it->second.GetBorrowerName());
 				}
 			}
 		}
@@ -103,26 +126,32 @@ public:
 	/* The name of every member with a book */
 	std::vector<std::string> BorrowersWithBook()
 	{
-		std::map<BookLoanKey, BookLoan> booksLoan = Database::GetInstance()._bookLoansTable;
+		std::unordered_map<BookLoanKey, BookLoan> booksLoan = Database::GetInstance()._bookLoansTable;
 		std::map<unsigned int, Borrower> borrower = Database::GetInstance()._borrowersTable;
 		std::vector<unsigned int> BorrowerNo;
-		std::vector<unsigned int> BorrowerName;
+		std::vector<std::string> BorrowerName;
 
-		for (std::map<BookLoanKey, BookLoan>::iterator it = booksLoan.begin(); it != booksLoan.end(); it++)
+		for (std::unordered_map<BookLoanKey, BookLoan>::iterator it = booksLoan.begin(); it != booksLoan.end(); it++)
 		{
-
-				BorrowerNo.push_back(GetBorrowerNo());
+				BorrowerNo.push_back(it->second.GetBorrowerNo());
 		}
 
 		for (std::map<unsigned int, Borrower>::iterator it = borrower.begin(); it != borrower.end(); it++)
 		{
-			for (int i = 0; i < CopyNo.size(); i++){
+			for (unsigned int i = 0; i < BorrowerNo.size(); i++){
 				if (it->second.GetBorrowerNo() == BorrowerNo[i])
 				{
-					BorrowerName.push_back(it->second.borrowerName());
+					BorrowerName.push_back(it->second.GetBorrowerName());
 				}
 			}
 		}
+
+
+		//ON DELETE LES DOUBLONS DU VECTEUR
+		std::sort(BorrowerName.begin(), BorrowerName.end());
+		auto last = std::unique(BorrowerName.begin(), BorrowerName.end());
+		BorrowerName.erase(last, BorrowerName.end());
+
 		return BorrowerName;
 	}
 };
