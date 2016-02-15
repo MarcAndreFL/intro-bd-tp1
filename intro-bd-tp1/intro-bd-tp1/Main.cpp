@@ -1,5 +1,6 @@
 #include "Database.h"
 #include "Parsing.h"
+#include "Request.h"
 #include <iostream>
 
 #define PAGE_MENU 0
@@ -27,6 +28,8 @@ void main(){
 }
 
 bool PrintUI(int page) {
+	Request resquester;
+
 	system("cls");
 
 	switch (page) {
@@ -36,7 +39,7 @@ bool PrintUI(int page) {
 			RepeatChar('-', 80);
 			std::cout << std::endl;
 
-			std::cout << " 1. Every book from 2012" << std::endl;
+			std::cout << " 1. Every book from 1931" << std::endl;
 			std::cout << " 2. Every copy of a particular book that are available" << std::endl;
 			std::cout << " 3. Every borrower who has a copy of a particular book" << std::endl;
 			std::cout << " 4. Every borrower who currently has a book in his possession" << std::endl;
@@ -57,10 +60,38 @@ bool PrintUI(int page) {
 			}
 			else {
 				switch (io) {
-					case 1: break;
-					case 2: break;
-					case 3: break;
-					case 4: break;
+					case 1: {
+						std::vector<std::string> booksName = resquester.BookFromYear(1931);
+						for (unsigned int i = 0; i < booksName.size(); i++){
+							std::cout << "Title:\t" << booksName[i] << "\n";
+						}
+						system("pause");
+						break;
+					}
+					case 2: {
+						std::vector<unsigned int> booksISBN = resquester.BookCopyAvailable(60725861);
+						for (unsigned int i = 0; i < booksISBN.size(); i++){
+							std::cout << "ISBN:\t" << booksISBN[i] << "\n";
+						}
+						system("pause");
+						break;
+					}
+					case 3: {
+						std::vector<std::string> borrowersWithBooksX = resquester.BorrowersWithXBook(60725861);
+							for (unsigned int i = 0; i < borrowersWithBooksX.size(); i++){
+							std::cout << "Borrower Name:\t" << borrowersWithBooksX[i] << "\n";
+						}
+						system("pause");
+						break;
+					}
+					case 4: {
+						std::vector<std::string> borrowersWithBooks = resquester.BorrowersWithBook();
+						for (unsigned int i = 0; i < borrowersWithBooks.size(); i++){
+							std::cout << "Borrower Name:\t" << borrowersWithBooks[i] << "\n";
+						}
+						system("pause");
+						break;
+					}
 					case 5: return false;
 				}
 			}
