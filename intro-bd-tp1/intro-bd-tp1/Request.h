@@ -68,8 +68,10 @@ public:
 						if (it->second.GetDateDue()._month < newtime.tm_mon + 1){
 							CopyNoAvailable.push_back(CopyNo[i]);
 						}
-						else if (it->second.GetDateDue()._day < newtime.tm_mday){
-							CopyNoAvailable.push_back(CopyNo[i]);
+						else if (it->second.GetDateDue()._month == newtime.tm_mday+1){
+							if (it->second.GetDateDue()._day < newtime.tm_mday){
+								CopyNoAvailable.push_back(CopyNo[i]);
+							}
 						}
 					}
 				}
@@ -94,6 +96,19 @@ public:
 		std::vector<unsigned int> BorrowerNo;
 		std::vector<std::string> BorrowerName;
 
+
+
+		struct tm newtime;
+		__time64_t long_time;
+		char timebuf[26];
+		errno_t err;
+
+		// Get time as 64-bit integer.
+		_time64(&long_time);
+		// Convert to local time.
+		err = _localtime64_s(&newtime, &long_time);
+
+
 		for (std::map<unsigned int, BookCopy>::iterator it = booksCopy.begin(); it != booksCopy.end(); it++)
 		{
 			if (it->second.GetISBN() == bookISBN)
@@ -106,17 +121,30 @@ public:
 		{
 			for (unsigned int i = 0; i < CopyNo.size(); i++){
 				if (it->second.GetCopyNo() == CopyNo[i]){
+					if (it->second.GetDateDue()._year > newtime.tm_year + 1900){
 						BorrowerNo.push_back(it->second.GetBorrowerNo());
 					}
+					else if (it->second.GetDateDue()._year == newtime.tm_year + 1900){
+						if (it->second.GetDateDue()._month > newtime.tm_mon + 1){
+							BorrowerNo.push_back(it->second.GetBorrowerNo());
+						}
+						else if (it->second.GetDateDue()._month == newtime.tm_mon + 1){
+							if (it->second.GetDateDue()._day > newtime.tm_mday){
+								BorrowerNo.push_back(it->second.GetBorrowerNo());
+							}
+						}
+					}
+				}
 			}
 		}
-
-		for (std::map<unsigned int, Borrower>::iterator it = borrower.begin(); it != borrower.end(); it++)
-		{
-			for (unsigned int i = 0; i < CopyNo.size(); i++){
-				if (it->second.GetBorrowerNo() == BorrowerNo[i])
-				{
-					BorrowerName.push_back(it->second.GetBorrowerName());
+		if (BorrowerNo.size() > 0){
+			for (std::map<unsigned int, Borrower>::iterator it = borrower.begin(); it != borrower.end(); it++)
+			{
+				for (unsigned int i = 0; i < BorrowerNo.size(); i++){
+					if (it->second.GetBorrowerNo() == BorrowerNo[i])
+					{
+						BorrowerName.push_back(it->second.GetBorrowerName());
+					}
 				}
 			}
 		}
@@ -143,15 +171,17 @@ public:
 
 		for (std::unordered_map<BookLoanKey, BookLoan>::iterator it = booksLoan.begin(); it != booksLoan.end(); it++)
 		{
-			if (it->second.GetDateDue()._year < newtime.tm_year + 1900){
+			if (it->second.GetDateDue()._year > newtime.tm_year + 1900){
 				BorrowerNo.push_back(it->second.GetBorrowerNo());
 			}
 			else if (it->second.GetDateDue()._year == newtime.tm_year + 1900){
-				if (it->second.GetDateDue()._month < newtime.tm_mon + 1){
+				if (it->second.GetDateDue()._month > newtime.tm_mon + 1){
 					BorrowerNo.push_back(it->second.GetBorrowerNo());
 				}
-				else if (it->second.GetDateDue()._day < newtime.tm_mday){
-					BorrowerNo.push_back(it->second.GetBorrowerNo());
+				else if (it->second.GetDateDue()._month == newtime.tm_mon + 1){
+					if (it->second.GetDateDue()._day > newtime.tm_mday){
+						BorrowerNo.push_back(it->second.GetBorrowerNo());
+					}
 				}
 			}
 		}
