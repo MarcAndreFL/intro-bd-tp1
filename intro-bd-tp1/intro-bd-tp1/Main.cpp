@@ -12,22 +12,10 @@ void RepeatChar(char, int);
 void main(){
 	Parsing parser;
 	parser.DoParsing();
-	Database::GetInstance()._bookTable;
-	Database::GetInstance()._bookCopiesTable;
-	Database::GetInstance()._bookLoansTable;
-	Database::GetInstance()._borrowersTable;
-	/*std::cout << "------------------------\n\tBORROWER LIST\n------------------------\n";
-	for (std::map<unsigned int, Borrower>::iterator it = Database::GetInstance()._borrowersTable.begin(); it != Database::GetInstance()._borrowersTable.end(); it++){
-		std::cout << "------------------------\n";
-		std::cout << "Borrower Name: " << it->second.GetBorrowerName() << "\n";
-		std::cout << "Borrower No: " << it->second.GetBorrowerNo() << "\n";
-		std::cout << "Borrower Address: " << it->second.GetBorrowerAddress() << "\n";
-		std::cout << "------------------------\n";
-	}*/
 	while (PrintUI(PAGE_MENU)) {}
 }
 
-bool PrintUI(int page) {
+inline bool PrintUI(int page) {
 	Request resquester;
 
 	system("cls");
@@ -78,7 +66,7 @@ bool PrintUI(int page) {
 						std::vector<unsigned int> booksISBN = resquester.BookCopyAvailable(input);
 						if (booksISBN.size() == 0) std::cout << "There is no book with the ISBN " << input << " available\n";
 						for (unsigned int i = 0; i < booksISBN.size(); i++){
-							std::cout << "ISBN:\t" << booksISBN[i] << "\n";
+							std::cout << "Copy Number:\t" << booksISBN[i] << "\n";
 						}
 						system("pause");
 						break;
@@ -115,7 +103,7 @@ bool PrintUI(int page) {
 	}
 }
 
-void RepeatChar(char c, int num) {
+inline void RepeatChar(char c, int num) {
 	for (int i = 0; i < num; i++) {
 		std::cout << c;
 	}

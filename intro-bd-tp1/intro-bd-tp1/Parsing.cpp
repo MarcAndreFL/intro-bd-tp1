@@ -1,4 +1,4 @@
-#include "Parsing.h"
+/*#include "Parsing.h"
 
 
 Parsing::Parsing()
@@ -155,4 +155,4 @@ void Parsing::DoBorrowerParsing(){
 			Database::GetInstance()._borrowersTable.insert(std::make_pair(borrowerID, currentBorrower));
 		}
 	}
-}
+}*/

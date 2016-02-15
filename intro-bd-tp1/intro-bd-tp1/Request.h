@@ -16,7 +16,7 @@ class Request
 {
 public:
 	/* The title of every book of a year */
-	std::vector<std::string> BookFromYear(int year)
+	inline std::vector<std::string> BookFromYear(int year)
 	{
 		std::map<unsigned int, Book> books = Database::GetInstance()._bookTable;
 		std::vector<std::string> bookName;
@@ -31,7 +31,7 @@ public:
 
 	/* Every copy of X book available */
 
-	std::vector<unsigned int> BookCopyAvailable(unsigned int bookISBN)
+	inline std::vector<unsigned int> BookCopyAvailable(unsigned int bookISBN)
 	{
 		std::map<unsigned int, BookCopy> booksCopy = Database::GetInstance()._bookCopiesTable;
 		std::unordered_map<BookLoanKey, BookLoan> booksLoan = Database::GetInstance()._bookLoansTable;
@@ -87,7 +87,7 @@ public:
 	}
 
 	/* The name of every member with X book */
-	std::vector<std::string> BorrowersWithXBook(unsigned int bookISBN) 
+	inline std::vector<std::string> BorrowersWithXBook(unsigned int bookISBN)
 	{
 		std::map<unsigned int, BookCopy> booksCopy = Database::GetInstance()._bookCopiesTable;
 		std::unordered_map<BookLoanKey, BookLoan> booksLoan = Database::GetInstance()._bookLoansTable;
@@ -152,7 +152,7 @@ public:
 	}
 
 	/* The name of every member with a book */
-	std::vector<std::string> BorrowersWithBook()
+	inline std::vector<std::string> BorrowersWithBook()
 	{
 		std::unordered_map<BookLoanKey, BookLoan> booksLoan = Database::GetInstance()._bookLoansTable;
 		std::map<unsigned int, Borrower> borrower = Database::GetInstance()._borrowersTable;
